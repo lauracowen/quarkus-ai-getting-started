@@ -1,5 +1,89 @@
-# Java and AI Master Course
+= My First AI Java App
 
-This is the supporting code for the Java and AI Master Course on Youtube. The course covers various topics related to Java and AI, including programming with Quarkus, using LangChain4j, and more.
+You will learn how to create a simple RESTful Java AI application that asks a large language model (LLM, or genAI) to write a short poem based on a topic provided by the user. The service responds to GET requests made to the `http://localhost:8080/poem/{topic}/{lines}` URL. The user enters the topic and length of the desired poem; for example `http://localhost:8080/poem/stars/5`, to generate a poem such as:
+
+----
+In velvet skies, the stars do dance,
+A million whispers, a cosmic romance.
+They weave tales of old, in shimmering light,
+Guiding lost souls through the velvet night.
+In their glow, the universe finds its chance.
+----
+
+You will create a Java class and a Java interface. The class represents a resource which defines the application's endpoint and calls the AI model by using the interface, or _AI service_. The AI service uses the parameter values passed in through the endpoint to build a prompt, a natural language text request, and sends it to the AI.
+
+The AI (the large language model, or LLM) parses the prompt and returns a poem according to the topic and number of lines requested in the prompt.
+
+
+
+
+
+
+
+
+
+== Creating the AI service
+
+
+
+
+== Creating the RESTful resource
+
+
+
+== Configuring
+
+Connecting to an LLM is greatly simplified by using the open source project LangChain4j. 
+
+
+== Running the application
+
+Run in dev mode. In terminal, run `./mvnw quarkus:dev`
+
+Example output:
+
+----
+In realms of code where brilliance gleams, Quarkus AI weaves its tech-bound dreams. With efficiency and grace it soars, Unlocking futures through digital doors.
+----
+
+
+
+=== Things to try
+
+
+
+
+Try changing the template parameter values and saving the file. Dev mode automatically rebuilds and redeploys the application so you can simply refresh the browser to see a new poem.
+
+
+==== Changing the LLM called by the application
+
+Try changing the LLM called by the app. For example, install Ollama and change the parameters in the `resources/application.properties` file to:
+
+----
+langchain4j-ollama-dev-service.ollama.host=host (1)
+langchain4j-ollama-dev-service.ollama.port=port (2)
+langchain4j-ollama-dev-service.ollama.endpoint=http://${langchain4j-ollama-dev-service.ollama.host}:${langchain4j-ollama-dev-service.ollama.port} (3)
+----
+. The host that the container is running on. Typically `localhost`, but it could be the name of the container network.
+. The port that the Ollama container is running on.
+. The fully-qualified url (host + port) to the running Ollama container.
+
+Though be aware that models usually large; they can take time to download and take a lot of space on your hard drive.
+
+
+
+
+
+== Testing
+
+
+
+
+== Where next?
+
+
+---
+Based on the supporting code for the Java and AI Master Course on Youtube. The course covers various topics related to Java and AI, including programming with Quarkus, using LangChain4j, and more.
 
 https://www.youtube.com/watch?v=HjjGzprkCKo&list=PL3D1G9_1R-YTS3Y_46nv0CgAcnroYv8xZ&index=2
