@@ -10,78 +10,68 @@ Guiding lost souls through the velvet night.
 In their glow, the universe finds its chance.
 ----
 
-You will create a Java class and a Java interface. The class represents a resource which defines the application's endpoint and calls the AI model by using the interface, or _AI service_. The AI service uses the parameter values passed in through the endpoint to build a prompt, a natural language text request, and sends it to the AI.
+You will create a Java class and a Java interface. The class represents a resource which defines the application's endpoint and calls the AI model by using the interface to implement an _AI service_. The AI service uses the parameter values passed in through the endpoint to build a prompt, a natural language text request, and sends it to the AI.
 
 The AI (the large language model, or LLM) parses the prompt and returns a poem according to the topic and number of lines requested in the prompt.
 
-
-
-
-
-
-
+Much of the work needed to build the prompt and to connect to the LLM in order to send the request and get a response is handled for you by LangChain4j, an open source extension to Quarkus.
 
 
 == Creating the AI service
 
+The AI service is a Java interface that provides a layer of abstraction to make it easier to interact with LLMs. As well as handling connection details (which are stored separately in the configuration `application.properties` file), the AI service provides the information that the application uses to build prompts to send to the LLM. AI services can also manage other information, including chat memory and toolboxes, which will be explored in other guides.
 
+The prompt in this application is built from the system message and the user message. System messages give the LLM contextual information and instructions for handling the request, often including examples that you want the LLM to follow when generating its response. User messages provide the LLM with the request from the application user.
 
+Create the `MyAiService.java` interface:
+
+[source,java,linenums]
+----
+include::finish/src/main/java/dev/kevindubois/MyAiService.java[]
+----
+<1> The `@RegisterAiService` annotation implements the interface as an AI service that will connect to the configured LLM.
+<2> The `@SystemMessage` annotation defines the system message, which provides the context or "scope" of the prompt.
+<3> The `@UserMessage` annotation provides the part of the prompt that the user is interested in asking the LLM.
+<4> The method starts an exchange between the application and the LLM, beginning with the system message and then the user message. Your application triggers this method and receives the response.
 
 == Creating the RESTful resource
 
+The RESTful resource contains the application itself and its endpoints that call the `writeAPoem()` method and implements the AI service.
+
+In this application, the resource class defines the endpoint that receives the user's input (choice of topic and number of lines in the poem) and then passes it to the AI service to include in its request to the LLM.
+
+Create the `MyResource.java` class:
+
+[source,java,linenums]
+----
+include::finish/src/main/java/dev/kevindubois/MyResource.java[]
+----
 
 
-== Configuring
+== Configuring the application
 
-Connecting to an LLM is greatly simplified by using the open source project LangChain4j. 
+Connecting to an LLM is greatly simplified by using LangChain4j. For this application, Quarkus uses the link:https://quarkus.io/extensions/io.quarkiverse.langchain4j/quarkus-langchain4j-openai/[Quarkus LangChain4j OpenAI extension], which is configured in the `pom.xml`. You then need only set the API key for the LLM; in this case, you can use the value `demo` to get limited demo access to the LLM which is sufficient for this application:
+
+[source,linenums]
+----
+include::finish/src/main/resources/application.properties[]
+----
 
 
 == Running the application
 
-Run in dev mode. In terminal, run `./mvnw quarkus:dev`
+In the terminal, run `./mvnw quarkus:dev` which starts the application in dev mode; any changes you make to the application are automatically rebuilt and deployed so you can see the changes quickly.
 
-Example output:
-
-----
-In realms of code where brilliance gleams, Quarkus AI weaves its tech-bound dreams. With efficiency and grace it soars, Unlocking futures through digital doors.
-----
-
-
-
-=== Things to try
-
-
-
-
-Try changing the template parameter values and saving the file. Dev mode automatically rebuilds and redeploys the application so you can simply refresh the browser to see a new poem.
-
-
-==== Changing the LLM called by the application
-
-Try changing the LLM called by the app. For example, install Ollama and change the parameters in the `resources/application.properties` file to:
+Request the endpoint with the values you choose replacing the template placeholders. For example, request a poem of 5 lines about stars:
 
 ----
-langchain4j-ollama-dev-service.ollama.host=host (1)
-langchain4j-ollama-dev-service.ollama.port=port (2)
-langchain4j-ollama-dev-service.ollama.endpoint=http://${langchain4j-ollama-dev-service.ollama.host}:${langchain4j-ollama-dev-service.ollama.port} (3)
+curl -w http://localhost:8080/poem/stars/5
 ----
-. The host that the container is running on. Typically `localhost`, but it could be the name of the container network.
-. The port that the Ollama container is running on.
-. The fully-qualified url (host + port) to the running Ollama container.
-
-Though be aware that models usually large; they can take time to download and take a lot of space on your hard drive.
-
-
-
-
-
-== Testing
-
-
 
 
 == Where next?
 
+??
 
 ---
 Based on the supporting code for the Java and AI Master Course on Youtube. The course covers various topics related to Java and AI, including programming with Quarkus, using LangChain4j, and more.

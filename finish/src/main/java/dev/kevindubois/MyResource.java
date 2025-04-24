@@ -12,12 +12,6 @@ public class MyResource {
     @Inject
     MyAiService myAiService;
 
-   /*  @GET
-    @Produces(MediaType.TEXT_HTML)
-    public String writeAPoem() {
-        return myAiService.writeAPoem("Quarkus AI", 4);
-    }
- */
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/{topic}/{lines}")
