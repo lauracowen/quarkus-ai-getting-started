@@ -1,4 +1,4 @@
-= My First AI Java App
+= Creating your first AI Java application with Quarkus and LangChain4j
 
 You will learn how to create a simple RESTful Java AI application that asks a large language model (LLM, or genAI) to write a short poem based on a topic provided by the user. The service responds to GET requests made to the `http://localhost:8080/poem/{topic}/{lines}` URL. The user enters the topic and length of the desired poem; for example `http://localhost:8080/poem/stars/5`, to generate a poem such as:
 
