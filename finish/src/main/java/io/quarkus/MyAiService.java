@@ -1,4 +1,4 @@
-package dev.kevindubois;
+package io.quarkus;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;

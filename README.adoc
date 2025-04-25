@@ -27,7 +27,7 @@ Create the `MyAiService.java` interface:
 
 [source,java,linenums]
 ----
-include::finish/src/main/java/dev/kevindubois/MyAiService.java[]
+include::finish/src/main/java/io/quarkus/MyAiService.java[]
 ----
 <1> The `@RegisterAiService` annotation implements the interface as an AI service that will connect to the configured LLM.
 <2> The `@SystemMessage` annotation defines the system message, which provides the context or "scope" of the prompt.
@@ -44,7 +44,7 @@ Create the `MyResource.java` class:
 
 [source,java,linenums]
 ----
-include::finish/src/main/java/dev/kevindubois/MyResource.java[]
+include::finish/src/main/java/io/quarkus/MyResource.java[]
 ----
 
 

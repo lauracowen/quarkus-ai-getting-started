@@ -25,3 +25,5 @@ replay_pid*
 
 # OSX
 .DS_Store
+.vscode/settings.json
+.vscode/
