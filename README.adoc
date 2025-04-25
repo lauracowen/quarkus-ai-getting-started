@@ -1,6 +1,6 @@
 = Creating your first AI Java application with Quarkus and LangChain4j
 
-You will learn how to create a simple RESTful Java AI application that asks a large language model (LLM, or genAI) to write a short poem based on a topic provided by the user. The service responds to GET requests made to the `http://localhost:8080/poem/{topic}/{lines}` URL. The user enters the topic and length of the desired poem; for example `http://localhost:8080/poem/stars/5`, to generate a poem such as:
+You will learn how to create a simple RESTful Java AI application that asks a large language model (LLM, or genAI) to write a short poem based on a topic provided by the user. The service responds to GET requests made to the `http://localhost:8080/poems/{topic}/{lines}` URL. The user enters the topic and length of the desired poem; for example `http://localhost:8080/poems/stars/5`, to generate a poem such as:
 
 ----
 In velvet skies, the stars do dance,
@@ -10,43 +10,44 @@ Guiding lost souls through the velvet night.
 In their glow, the universe finds its chance.
 ----
 
-You will create a Java class and a Java interface. The class represents a resource which defines the application's endpoint and calls the AI model by using the interface to implement an _AI service_. The AI service uses the parameter values passed in through the endpoint to build a prompt, a natural language text request, and sends it to the AI.
+You will create a Java class and a Java interface. The class represents a resource which defines the application's endpoint and calls the AI model by using the interface to implement an AI service. The AI service uses the parameter values passed in through the endpoint to build a prompt, a natural language text request, and sends it to the AI.
 
-The AI (the large language model, or LLM) parses the prompt and returns a poem according to the topic and number of lines requested in the prompt.
+The AI (the large language model, or LLM) parses the prompt and returns a poem according to the topic and number of lines requested in the prompt. LLMs are AI models that are trained to generate output based on the natural language requests they receive. The input and output of LLMs are usually text, as in this application, but some LLMs specialise in other formats such as images or video.
 
 Much of the work needed to build the prompt and to connect to the LLM in order to send the request and get a response is handled for you by LangChain4j, an open source extension to Quarkus.
 
 
 == Creating the AI service
 
-The AI service is a Java interface that provides a layer of abstraction to make it easier to interact with LLMs. As well as handling connection details (which are stored separately in the configuration `application.properties` file), the AI service provides the information that the application uses to build prompts to send to the LLM. AI services can also manage other information, including chat memory and toolboxes, which will be explored in other guides.
+The AI service provides an abstraction layer to make it easier to write a Java application that interacts with an LLM. The AI service builds the prompts to send to the LLM and receives the responses from the LLM on behalf of the application. The application needs only minimal configuration to connect to the LLM because the AI service handles the connection details. AI services can manage other information too, including chat memory and toolboxes, which will be explored in other guides.
 
-The prompt in this application is built from the system message and the user message. System messages give the LLM contextual information and instructions for handling the request, often including examples that you want the LLM to follow when generating its response. User messages provide the LLM with the request from the application user.
-
-Create the `MyAiService.java` interface:
+Create the `AiPoemService.java` interface:
 
 [source,java,linenums]
 ----
-include::finish/src/main/java/io/quarkus/MyAiService.java[]
+include::finish/src/main/java/io/quarkus/AiPoemService.java[]
 ----
-<1> The `@RegisterAiService` annotation implements the interface as an AI service that will connect to the configured LLM.
-<2> The `@SystemMessage` annotation defines the system message, which provides the context or "scope" of the prompt.
-<3> The `@UserMessage` annotation provides the part of the prompt that the user is interested in asking the LLM.
-<4> The method starts an exchange between the application and the LLM, beginning with the system message and then the user message. Your application triggers this method and receives the response.
+<1> Implements the interface as an AI service which can connect to the LLM that is configured in the `resources/application.properties` file.
+<2> Defines the system message, which provides the context of the prompt. In this case, the system message instructs the LLM to take the role of a professional poet and to display the generated poem in well-formed HTML with line breaks so that it renders neatly when viewed in a web browser. The system message often includes examples of the response to be generated by the LLM but that isn't necessary here.
+<3> Defines the user message, which provides the question that the application user is asking the LLM. The user message in this case includes placeholders, `{topic}` and `{length}`, which receive the user's chosen values as entered in the endpoint.
+<4> Starts an exchange between the application and the LLM, sending the system message and then the user message. The `writeAPoem()` method is called by the `showMeAPoem()` method in the Poems class.
 
 == Creating the RESTful resource
 
-The RESTful resource contains the application itself and its endpoints that call the `writeAPoem()` method and implements the AI service.
+The RESTful resource defines the endpoint of your RESTful service. When a GET request is made to the endpoint, the `showMeAPoem()` method runs and causes the writeAPoem() method in the AI service to send a request to the LLM.
 
 In this application, the resource class defines the endpoint that receives the user's input (choice of topic and number of lines in the poem) and then passes it to the AI service to include in its request to the LLM.
 
-Create the `MyResource.java` class:
+Create the `Poems.java` class:
 
 [source,java,linenums]
 ----
-include::finish/src/main/java/io/quarkus/MyResource.java[]
+include::finish/src/main/java/io/quarkus/Poems.java[]
 ----
-
+<1> Implements the AiPoemService interface as aiPoemService.
+<2> Defines the RESTful endpoint that takes the values of the variables that are used by the AI service to replace the placeholders in the user message when building the prompt.
+<3> Declares the showMeAPoem() method which takes two arguments, `mytopic` and `lines`. When a GET request is made to the `/poems/{mytopic}/{lines}` endpoint, the values of the `{mytopic}` and `{lines}` parts of the endpoint are passed to the method's `mytopic` and `lines` arguments.
+<4> The `showMeaPoem()` method returns the result of calling the AI service's `writeAPoem()` method with the values received from the endpoint. Calling the `writeAPoem()` method causes these values to be added to the user message as part of the prompt that the AI service sends to the LLM. The response from the LLM is then displayed in HTML.
 
 == Configuring the application
 
@@ -62,18 +63,18 @@ include::finish/src/main/resources/application.properties[]
 
 In the terminal, run `./mvnw quarkus:dev` which starts the application in dev mode; any changes you make to the application are automatically rebuilt and deployed so you can see the changes quickly.
 
-Request the endpoint with the values you choose replacing the template placeholders. For example, request a poem of 5 lines about stars:
+Request the endpoint with the values you choose replacing the template placeholders. For example, request a poem of 5 lines about stars with the URI `http://localhost:8080/poems/stars/5`. The HTML request in the system message means that it should display neatly in a web browser.
+
+Alternatively, run the following curl command:
 
 ----
-curl -w http://localhost:8080/poem/stars/5
+curl -w "\n" http://localhost:8080/poems/stars/5
 ----
 
+There is a slight pause while the LLM responds then the application returns a short poem on the chosen topic and of the requested length.
 
 == Where next?
 
-??
+You have now created your first AI Java application and run it on Quarkus with LangChain4j. 
 
----
-Based on the supporting code for the Java and AI Master Course on Youtube. The course covers various topics related to Java and AI, including programming with Quarkus, using LangChain4j, and more.
-
-https://www.youtube.com/watch?v=HjjGzprkCKo&list=PL3D1G9_1R-YTS3Y_46nv0CgAcnroYv8xZ&index=2
+Next, you can learn more about writing AI Java applications with Quarkus and LangChain4j in the link:https://redhat-developer-demos.github.io/quarkus-tutorial/quarkus-tutorial/17_ai_intro.html[Quarkus and AI tutorial].
