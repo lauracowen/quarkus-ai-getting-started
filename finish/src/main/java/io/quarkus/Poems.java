@@ -6,16 +6,16 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-@Path("/poem")
-public class MyResource {
+@Path("/poems")
+public class Poems {
 
     @Inject
-    MyAiService myAiService;
+    AiPoemService aiPoemService;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/{topic}/{lines}")
-    public String writeAPoem(String topic, int lines) {
-        return myAiService.writeAPoem(topic, lines);
+    @Path("/{mytopic}/{lines}")
+    public String showMeAPoem(String mytopic, int lines) {
+        return aiPoemService.writeAPoem(mytopic, lines);
     }
 }
