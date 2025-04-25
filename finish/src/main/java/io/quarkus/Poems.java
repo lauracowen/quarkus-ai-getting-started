@@ -10,12 +10,12 @@ import jakarta.ws.rs.core.MediaType;
 public class Poems {
 
     @Inject
-    AiPoemService aiPoemService;
+    AiPoemService aiPoemService;  //<1>
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/{mytopic}/{lines}")
-    public String showMeAPoem(String mytopic, int lines) {
-        return aiPoemService.writeAPoem(mytopic, lines);
+    @Path("/{mytopic}/{lines}")  //<2>
+    public String showMeAPoem(String mytopic, int lines) {  //<3>
+        return aiPoemService.writeAPoem(mytopic, lines);  // <4>
     }
 }
