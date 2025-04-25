@@ -1,4 +1,4 @@
-package dev.kevindubois;
+package io.quarkus;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
