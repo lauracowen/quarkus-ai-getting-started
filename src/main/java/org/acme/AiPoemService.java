@@ -1,4 +1,4 @@
-package io.quarkus;
+package org.acme;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
