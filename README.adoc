@@ -19,11 +19,7 @@ Much of the work needed to build the prompt and to connect to the LLM in order t
 
 == Creating the AI service
 
-RE-WRITE THIS CONCEPTUAL INFO
-
-The AI service is a Java interface that provides a layer of abstraction to make it easier to interact with LLMs. As well as handling connection details (which are stored separately in a configuration file), the AI service provides the information that the application uses to build prompts to send to the LLM. AI services can also manage other information, including chat memory and toolboxes, which will be explored in other guides.
-
-The prompt in this application is built from the system message and the user message. System messages give the LLM contextual information and instructions for handling the request, often including examples that you want the LLM to follow when generating its response. User messages provide the LLM with the request from the application user.
+The AI service provides an abstraction layer to make it easier to write a Java application that interacts with an LLM. The AI service builds the prompts to send to the LLM and receives the responses from the LLM on behalf of the application. The application needs only minimal configuration to connect to the LLM because the AI service handles the connection details. AI services can manage other information too, including chat memory and toolboxes, which will be explored in other guides.
 
 Create the `AiPoemService.java` interface:
 
@@ -75,12 +71,10 @@ Alternatively, run the following curl command:
 curl -w "\n" http://localhost:8080/poems/stars/5
 ----
 
+There is a slight pause while the LLM responds then the application returns a short poem on the chosen topic and of the requested length.
 
 == Where next?
 
-??
+You have now created your first AI Java application and run it on Quarkus with LangChain4j. 
 
----
-Based on the supporting code for the Java and AI Master Course on Youtube. The course covers various topics related to Java and AI, including programming with Quarkus, using LangChain4j, and more.
-
-https://www.youtube.com/watch?v=HjjGzprkCKo&list=PL3D1G9_1R-YTS3Y_46nv0CgAcnroYv8xZ&index=2
+Next, you can learn more about writing AI Java applications with Quarkus and LangChain4j in the link:https://redhat-developer-demos.github.io/quarkus-tutorial/quarkus-tutorial/17_ai_intro.html[Quarkus and AI tutorial].
