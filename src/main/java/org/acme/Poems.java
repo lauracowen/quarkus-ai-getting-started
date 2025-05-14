@@ -15,8 +15,8 @@ public class Poems {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/{mytopic}/{lines}")  //<2>
-    public String showMeAPoem(@PathParam("topic") String mytopic, @PathParam("lines") int lines) {  //<3>
-        return aiPoemService.writeAPoem(mytopic, lines);  // <4>
+    @Path("/{my-topic}/{my-lines}")  //<2>
+    public String showMeAPoem(@PathParam("my-topic") String requestedTopic, @PathParam("my-lines") int requestedLines) {  //<3>
+        return aiPoemService.writeAPoem(requestedTopic, requestedLines);  // <4>
     }
 }
