@@ -123,4 +123,10 @@ The application runs and returns a response based on the system and user message
 
 Congratulations! You have created your first AI Java application and run it on Quarkus with LangChain4j.
 
-Next, if you want to learn more about writing AI Java applications with Quarkus and LangChain4j, take a look at the link:https://redhat-developer-demos.github.io/quarkus-tutorial/quarkus-tutorial/17_ai_intro.html[Quarkus and AI tutorial].
+Next, 
+
+...either: 
+take a look at the link:https://developer.ibm.com/tutorials/build-ai-assistant-quarkus-langchain/[Build an AI-powered document assistant with Quarkus and LangChain4j] (maybe a little bit of a jump from this very basic tutorial)
+
+...or:
+https://developer.ibm.com/tutorials/create-simple-rest-app-quarkus/ (basic intro to Quarkus but not AI)
